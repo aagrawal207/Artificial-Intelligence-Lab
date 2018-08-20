@@ -100,7 +100,6 @@ def a_star(puzzle_start, goal):
             continue
         closed_list[puzzle_configuration_string] = puzzle_state.puzzle_configuration
         string_to_matrix_mapping[puzzle_configuration_string] = puzzle_state.puzzle_configuration
-        # print(puzzle_state.puzzle_configuration)
         if puzzle_state.puzzle_configuration == goal:
             optimal_path_cost = puzzle_state.g_n
             break

@@ -13,6 +13,8 @@ class Puzzle:
         self.h_n = h_n
 
     def __lt__(self, other):
+        if (self.g_n + self.h_n) == (other.g_n + other.h_n):
+            return self.g_n < other.g_n
         return (self.g_n + self.h_n) <= (other.g_n + other.h_n)
 
 
@@ -35,19 +37,6 @@ def print_configuration(matrix):
         for val in row:
             print(val, end=" ")
         print()
-
-
-def print_optimal_path(parent_list, optimal_path_len, goal, start, string_to_matrix_mapping, total_states_on_optimal_path):
-    if goal == start:
-        print("Total number of states on optimal path:",
-              total_states_on_optimal_path)
-    else:
-        node = parent_list[''.join(str(val) for row in goal for val in row)]
-        node = string_to_matrix_mapping[node]
-        print_optimal_path(parent_list, optimal_path_len,
-                           node, start, string_to_matrix_mapping, total_states_on_optimal_path + 1)
-        print_configuration(node)
-        print("  v  ")
 
 
 def find_neighbours(puzzle_state):
@@ -184,28 +173,34 @@ if __name__ == '__main__':
         # 1st choice
         puzzle_start = Puzzle(start, 0, h_n(start, goal, choice1))
         start = timeit.default_timer()
-        closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
+        closed_list1, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
             puzzle_start, goal, choice1)
+        if optimal_path_cost == -1:
+            print("No path found. Goal is unreachable.")
+            exit(0)
         stop = timeit.default_timer()
-        table.add_row([choices[choice1], len(closed_list.keys()),
+        table.add_row([choices[choice1], len(closed_list1.keys()),
                        optimal_path_cost + 1, optimal_path_cost, stop - start])
-        set1 = set(closed_list.keys())
+        set1 = set(closed_list1.keys())
 
         # 2nd choice
         start = start_temp
         puzzle_start = Puzzle(start, 0, h_n(start, goal, choice2))
         start = timeit.default_timer()
-        closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
+        closed_list2, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
             puzzle_start, goal, choice2)
         stop = timeit.default_timer()
-        table.add_row([choices[choice2], len(closed_list.keys()),
+        table.add_row([choices[choice2], len(closed_list2.keys()),
                        optimal_path_cost + 1, optimal_path_cost, stop - start])
-        set2 = set(closed_list.keys())
+        set2 = set(closed_list2.keys())
         print(table)
         print()
-        if set2.issuperset(set1):
+        if set2.__eq__(set1):
             print(choices[choice2]+" visits all nodes visited by " +
-                  choices[choice1]+"plus extra")
+                  choices[choice1])
+        elif set2.issuperset(set1):
+            print(choices[choice2]+" visits all nodes visited by " +
+                  choices[choice1]+" plus extra")
         elif set1.issuperset(set2):
             print(choices[choice1] + " visits all nodes visited by " +
                   choices[choice2] + " plus extra")

@@ -171,6 +171,9 @@ Enter choice: '''))
         start = timeit.default_timer()
         closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
             puzzle_start, goal, 3)
+        if optimal_path_cost == -1:
+            print("No path found. Goal is unreachable.")
+            exit(0)
         stop = timeit.default_timer()
         table.add_row(["Manhattan", len(closed_list.keys()),
                        optimal_path_cost + 1, optimal_path_cost, stop - start])
@@ -194,7 +197,6 @@ Enter choice: '''))
                        optimal_path_cost + 1, optimal_path_cost, stop - start])
         print(table)
     else:
-        print("\nGo for a chill walk or something, this will take around 20 mins.\n")
         puzzle_start = Puzzle(start, 0, h_n(start, goal, choice))
         closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
             puzzle_start, goal, choice)
