@@ -85,27 +85,30 @@ def a_star(puzzle_start, goal):
     open_list = PriorityQueue()
     open_list.put(puzzle_start)
     open_list_len = 1
-    closed_list = []
+    closed_list = {}
     parent_list = {}
     string_to_matrix_mapping = {}
     optimal_path_cost = -1
     while open_list_len > 0:
         puzzle_state = open_list.get()
+        puzzle_configuration_string = ''.join(
+            str(val) for row in puzzle_state.puzzle_configuration for val in row)
+        if puzzle_configuration_string in closed_list:
+            continue
         open_list_len -= 1
-        closed_list.append(puzzle_state.puzzle_configuration)
-        string_to_matrix_mapping[''.join(str(
-            val) for row in puzzle_state.puzzle_configuration for val in row)] = puzzle_state.puzzle_configuration
+        closed_list[puzzle_configuration_string] = puzzle_state.puzzle_configuration
+        string_to_matrix_mapping[puzzle_configuration_string] = puzzle_state.puzzle_configuration
         # print(puzzle_state.puzzle_configuration)
         if puzzle_state.puzzle_configuration == goal:
             optimal_path_cost = puzzle_state.g_n
             break
         neighbours = find_neighbours(puzzle_state.puzzle_configuration)
         for neighbour in neighbours:
-            if neighbour not in closed_list:
-                string_to_matrix_mapping[''.join(
-                    str(val) for row in neighbour for val in row)] = goal
-                parent_list[''.join(str(val) for row in neighbour for val in row)] = ''.join(
-                    str(val) for row in puzzle_state.puzzle_configuration for val in row)
+            neighbour_string = ''.join(str(val)
+                                       for row in neighbour for val in row)
+            if neighbour_string not in closed_list:
+                string_to_matrix_mapping[neighbour_string] = goal
+                parent_list[neighbour_string] = puzzle_configuration_string
                 open_list.put(
                     Puzzle(neighbour, puzzle_state.g_n + 1, displaced_tiles_heuristic(neighbour)))
                 open_list_len += 1

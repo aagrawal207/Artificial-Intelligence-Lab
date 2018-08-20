@@ -1,7 +1,9 @@
-from queue import PriorityQueue
 from copy import deepcopy
+from prettytable import PrettyTable
+from queue import PriorityQueue
 import os
 import sys
+import timeit
 
 
 class Puzzle:
@@ -72,19 +74,29 @@ def find_neighbours(puzzle_state):
     return neighbours
 
 
-def manhattan_heuristic(puzzle_configuration):
-    heuristic_distance = 0
-    real_row = [0, 0, 0, 1, 1, 1, 2, 2, 2]
-    real_col = [0, 1, 2, 0, 1, 2, 0, 1, 2]
-    for i in range(3):
-        for j in range(3):
-            val = puzzle_configuration[i][j] - 1
-            heuristic_distance += abs(real_row[val] - i) + \
-                abs(real_col[val] - j)
-    return heuristic_distance
+def h_n(puzzle_configuration, heuristic_id):
+    if heuristic_id == 1:
+        return 0
+    elif heuristic_id == 2:
+        heuristic_distance = 0
+        for i in range(3):
+            for j in range(3):
+                if puzzle_configuration[i][j] != (3 * i + j + 1):
+                    heuristic_distance += 1
+        return heuristic_distance
+    elif heuristic_id == 3:
+        heuristic_distance = 0
+        real_row = [0, 0, 0, 1, 1, 1, 2, 2, 2]
+        real_col = [0, 1, 2, 0, 1, 2, 0, 1, 2]
+        for i in range(3):
+            for j in range(3):
+                val = puzzle_configuration[i][j] - 1
+                heuristic_distance += abs(real_row[val] - i) + \
+                    abs(real_col[val] - j)
+        return heuristic_distance
 
 
-def a_star(puzzle_start, goal):
+def a_star(puzzle_start, goal, heuristic_id):
     open_list = PriorityQueue()
     open_list.put(puzzle_start)
     open_list_len = 1
@@ -113,7 +125,7 @@ def a_star(puzzle_start, goal):
                 string_to_matrix_mapping[neighbour_string] = goal
                 parent_list[neighbour_string] = puzzle_configuration_string
                 open_list.put(
-                    Puzzle(neighbour, puzzle_state.g_n + 1, manhattan_heuristic(neighbour)))
+                    Puzzle(neighbour, puzzle_state.g_n + 1, h_n(neighbour, heuristic_id)))
                 open_list_len += 1
     return closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping
 
@@ -135,26 +147,68 @@ if __name__ == '__main__':
     except IOError:
         print("ERROR : IOERROR occurred while opening file")
         exit(0)
-    puzzle_start = Puzzle(start, 0, manhattan_heuristic(start))
-    closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
-        puzzle_start, goal)
-    if optimal_path_cost >= 0:
-        print("Goal found successfully.")
+    choice = int(input('''1. Zero Heuristic.
+2. Displced tiles Heuristic.
+3. Manhattan distance Heuristic.
+4. Compare all the above and show in table format.
+Enter choice: '''))
+    if choice > 4 or choice < 1:
+        print("Invalid choice bc.")
+    elif choice == 4:
+        print("\nGo for a chill walk or something, this will take around 20 mins.\n")
+        table = PrettyTable(["Heuristic", "Total states explored",
+                             "Total states on the optimal path", "Optimal path cost", "Total time taken (secs)"])
+        start_temp = deepcopy(start)
+        # Manhattan
+        puzzle_start = Puzzle(start, 0, h_n(start, 3))
+        start = timeit.default_timer()
+        closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
+            puzzle_start, goal, 3)
+        stop = timeit.default_timer()
+        table.add_row(["Manhattan", len(closed_list.keys()),
+                       optimal_path_cost + 1, optimal_path_cost, stop - start])
+        # displaced tiles
+        start = start_temp
+        puzzle_start = Puzzle(start, 0, h_n(start, 2))
+        start = timeit.default_timer()
+        closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
+            puzzle_start, goal, 2)
+        stop = timeit.default_timer()
+        table.add_row(["Displaced tiles", len(closed_list.keys()),
+                       optimal_path_cost + 1, optimal_path_cost, stop - start])
+        # No Heuristic
+        start = start_temp
+        puzzle_start = Puzzle(start, 0, h_n(start, 1))
+        start = timeit.default_timer()
+        closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
+            puzzle_start, goal, 1)
+        stop = timeit.default_timer()
+        table.add_row(["No Heuristic", len(closed_list.keys()),
+                       optimal_path_cost + 1, optimal_path_cost, stop - start])
+        print(table)
     else:
-        print("Goal NOT found")
-    print("Start state: ")
-    print_configuration(start)
-    print("\nGoal state: ")
-    print_configuration(goal)
-    print('Total configurations explored: ' + str(len(closed_list)))
-    if optimal_path_cost > 0:
-        print_optimal_path(parent_list, 0,
-                           goal, start, string_to_matrix_mapping, 1)
+        if choice == 0:
+            print("\nGo for a chill walk or something, this will take around 20 mins.\n")
+        puzzle_start = Puzzle(start, 0, h_n(start, choice))
+        closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
+            puzzle_start, goal, choice)
+        if optimal_path_cost >= 0:
+            print("Goal found successfully.")
+        else:
+            print("Goal NOT found")
+        print("Start state: ")
+        print_configuration(start)
+        print("\nGoal state: ")
         print_configuration(goal)
-        print("Optimal cost of the path:", optimal_path_cost)
-    elif optimal_path_cost == 0:
-        print("Total number of states on optimal path:", 1)
-        print_configuration(goal)
-        print("  v  ")
-        print_configuration(goal)
-        print("Optimal cost of the path:", optimal_path_cost)
+        print('Total configurations explored: ' + str(len(closed_list.keys())))
+        if optimal_path_cost > 0:
+            print_optimal_path(parent_list, 0,
+                               goal, start, string_to_matrix_mapping, 1)
+            print_configuration(goal)
+            print("Optimal cost of the path:", optimal_path_cost)
+        elif optimal_path_cost == 0:
+            print("Total number of states on optimal path:", 1)
+            print_configuration(goal)
+            print("  v  ")
+            print_configuration(goal)
+            print("Optimal cost of the path:", optimal_path_cost)
