@@ -52,6 +52,7 @@ def find_neighbours(puzzle_state):
     neighbours = []
     row, col = 0, 0
     N = len(puzzle_state)
+    # row, col = get_row_col_of_val(puzzle_state, 0)
     for i in range(3):
         for j in range(3):
             if puzzle_state[i][j] == 0:
@@ -87,6 +88,25 @@ def manhattan_heuristic(puzzle_configuration, goal):
                 continue
             heuristic_distance += abs(real_row[val] - i) + \
                 abs(real_col[val] - j)
+    return heuristic_distance
+
+
+def get_row_col_of_val(matrix, value):
+    for i in range(3):
+        for j in range(3):
+            if matrix[i][j] == value:
+                return (i, j)
+    return None
+
+
+def new_manhattan_heuristic(current_state, goal_state):
+    heuristic_distance = 0
+    for i in range(3):
+        for j in range(3):
+            value = current_state[i][j]
+            final_row, final_col = get_row_col_of_val(goal_state, value)
+            print("value %d row %d col %d" % (value, final_row, final_col))
+            heuristic_distance += abs(i - final_row) + abs(j - final_col)
     return heuristic_distance
 
 
