@@ -74,14 +74,16 @@ def find_neighbours(puzzle_state):
     return neighbours
 
 
-def h_n(puzzle_configuration, heuristic_id):
+def h_n(puzzle_configuration, goal, heuristic_id):
     if heuristic_id == 1:
         return 0
     elif heuristic_id == 2:
         heuristic_distance = 0
         for i in range(3):
             for j in range(3):
-                if puzzle_configuration[i][j] != (3 * i + j + 1):
+                if puzzle_configuration[i][j] == 0:
+                    continue
+                if puzzle_configuration[i][j] != goal[i][j]:
                     heuristic_distance += 1
         return heuristic_distance
     elif heuristic_id == 3:
@@ -90,7 +92,13 @@ def h_n(puzzle_configuration, heuristic_id):
         real_col = [0, 1, 2, 0, 1, 2, 0, 1, 2]
         for i in range(3):
             for j in range(3):
+                real_row[goal[i][j] - 1] = i
+                real_col[goal[i][j] - 1] = j
+        for i in range(3):
+            for j in range(3):
                 val = puzzle_configuration[i][j] - 1
+                if val == -1:
+                    continue
                 heuristic_distance += abs(real_row[val] - i) + \
                     abs(real_col[val] - j)
         return heuristic_distance
@@ -125,7 +133,7 @@ def a_star(puzzle_start, goal, heuristic_id):
                 string_to_matrix_mapping[neighbour_string] = goal
                 parent_list[neighbour_string] = puzzle_configuration_string
                 open_list.put(
-                    Puzzle(neighbour, puzzle_state.g_n + 1, h_n(neighbour, heuristic_id)))
+                    Puzzle(neighbour, puzzle_state.g_n + 1, h_n(neighbour, goal, heuristic_id)))
                 open_list_len += 1
     return closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping
 
@@ -155,12 +163,11 @@ Enter choice: '''))
     if choice > 4 or choice < 1:
         print("Invalid choice bc.")
     elif choice == 4:
-        print("\nGo for a chill walk or something, this will take around 20 mins.\n")
         table = PrettyTable(["Heuristic", "Total states explored",
                              "Total states on the optimal path", "Optimal path cost", "Total time taken (secs)"])
         start_temp = deepcopy(start)
         # Manhattan
-        puzzle_start = Puzzle(start, 0, h_n(start, 3))
+        puzzle_start = Puzzle(start, 0, h_n(start, goal, 3))
         start = timeit.default_timer()
         closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
             puzzle_start, goal, 3)
@@ -169,7 +176,7 @@ Enter choice: '''))
                        optimal_path_cost + 1, optimal_path_cost, stop - start])
         # displaced tiles
         start = start_temp
-        puzzle_start = Puzzle(start, 0, h_n(start, 2))
+        puzzle_start = Puzzle(start, 0, h_n(start, goal, 2))
         start = timeit.default_timer()
         closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
             puzzle_start, goal, 2)
@@ -178,7 +185,7 @@ Enter choice: '''))
                        optimal_path_cost + 1, optimal_path_cost, stop - start])
         # No Heuristic
         start = start_temp
-        puzzle_start = Puzzle(start, 0, h_n(start, 1))
+        puzzle_start = Puzzle(start, 0, h_n(start, goal, 1))
         start = timeit.default_timer()
         closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
             puzzle_start, goal, 1)
@@ -187,9 +194,8 @@ Enter choice: '''))
                        optimal_path_cost + 1, optimal_path_cost, stop - start])
         print(table)
     else:
-        if choice == 0:
-            print("\nGo for a chill walk or something, this will take around 20 mins.\n")
-        puzzle_start = Puzzle(start, 0, h_n(start, choice))
+        print("\nGo for a chill walk or something, this will take around 20 mins.\n")
+        puzzle_start = Puzzle(start, 0, h_n(start, goal, choice))
         closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
             puzzle_start, goal, choice)
         if optimal_path_cost >= 0:

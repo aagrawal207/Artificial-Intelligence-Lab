@@ -72,11 +72,13 @@ def find_neighbours(puzzle_state):
     return neighbours
 
 
-def displaced_tiles_heuristic(puzzle_configuration):
+def displaced_tiles_heuristic(puzzle_configuration, goal):
     heuristic_distance = 0
     for i in range(3):
         for j in range(3):
-            if puzzle_configuration[i][j] != (3 * i + j + 1):
+            if puzzle_configuration[i][j] == 0:
+                continue
+            if puzzle_configuration[i][j] != goal[i][j]:
                 heuristic_distance += 1
     return heuristic_distance
 
@@ -110,7 +112,7 @@ def a_star(puzzle_start, goal):
                 string_to_matrix_mapping[neighbour_string] = goal
                 parent_list[neighbour_string] = puzzle_configuration_string
                 open_list.put(
-                    Puzzle(neighbour, puzzle_state.g_n + 1, displaced_tiles_heuristic(neighbour)))
+                    Puzzle(neighbour, puzzle_state.g_n + 1, displaced_tiles_heuristic(neighbour, goal)))
                 open_list_len += 1
     return closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping
 
@@ -132,7 +134,7 @@ if __name__ == '__main__':
     except IOError:
         print("ERROR : IOERROR occurred while opening file")
         exit(0)
-    puzzle_start = Puzzle(start, 0, displaced_tiles_heuristic(start))
+    puzzle_start = Puzzle(start, 0, displaced_tiles_heuristic(start, goal))
     closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
         puzzle_start, goal)
     if optimal_path_cost >= 0:

@@ -72,13 +72,19 @@ def find_neighbours(puzzle_state):
     return neighbours
 
 
-def manhattan_heuristic(puzzle_configuration):
+def manhattan_heuristic(puzzle_configuration, goal):
     heuristic_distance = 0
     real_row = [0, 0, 0, 1, 1, 1, 2, 2, 2]
     real_col = [0, 1, 2, 0, 1, 2, 0, 1, 2]
     for i in range(3):
         for j in range(3):
+            real_row[goal[i][j] - 1] = i
+            real_col[goal[i][j] - 1] = j
+    for i in range(3):
+        for j in range(3):
             val = puzzle_configuration[i][j] - 1
+            if val == -1:
+                continue
             heuristic_distance += abs(real_row[val] - i) + \
                 abs(real_col[val] - j)
     return heuristic_distance
@@ -113,7 +119,7 @@ def a_star(puzzle_start, goal):
                 string_to_matrix_mapping[neighbour_string] = goal
                 parent_list[neighbour_string] = puzzle_configuration_string
                 open_list.put(
-                    Puzzle(neighbour, puzzle_state.g_n + 1, manhattan_heuristic(neighbour)))
+                    Puzzle(neighbour, puzzle_state.g_n + 1, manhattan_heuristic(neighbour, goal)))
                 open_list_len += 1
     return closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping
 
@@ -135,7 +141,7 @@ if __name__ == '__main__':
     except IOError:
         print("ERROR : IOERROR occurred while opening file")
         exit(0)
-    puzzle_start = Puzzle(start, 0, manhattan_heuristic(start))
+    puzzle_start = Puzzle(start, 0, manhattan_heuristic(start, goal))
     closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping = a_star(
         puzzle_start, goal)
     if optimal_path_cost >= 0:
