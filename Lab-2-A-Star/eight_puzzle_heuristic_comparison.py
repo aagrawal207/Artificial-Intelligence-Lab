@@ -122,11 +122,11 @@ def a_star(puzzle_start, goal, heuristic_id):
     optimal_path_cost = -1
     while open_list_len > 0:
         puzzle_state = open_list.get()
+        open_list_len -= 1
         puzzle_configuration_string = ''.join(
             str(val) for row in puzzle_state.puzzle_configuration for val in row)
         if puzzle_configuration_string in closed_list:
             continue
-        open_list_len -= 1
         closed_list[puzzle_configuration_string] = puzzle_state.puzzle_configuration
         string_to_matrix_mapping[puzzle_configuration_string] = puzzle_state.puzzle_configuration
         # print(puzzle_state.puzzle_configuration)
@@ -149,6 +149,7 @@ def a_star(puzzle_start, goal, heuristic_id):
 def check(choice):
     return choice < 1 or choice > 4
 
+
 # each separate list in puzzle_start list represent a row
 # 0 represent blank space
 if __name__ == '__main__':
@@ -167,7 +168,8 @@ if __name__ == '__main__':
         print("ERROR : IOERROR occurred while opening file")
         exit(0)
 
-    choices = ["", "Zero Heuristic", "Displaced Tiles", "Manhattan", "Large Heuristic(h(n)>h*(n))"]
+    choices = ["", "Zero Heuristic", "Displaced Tiles",
+               "Manhattan", "Large Heuristic(h(n)>h*(n))"]
     print('''1. Zero Heuristic.
 2. Displced tiles Heuristic.
 3. Manhattan distance Heuristic.
@@ -203,8 +205,10 @@ if __name__ == '__main__':
         print(table)
         print()
         if set2.issuperset(set1):
-            print(choices[choice2]+" visits all nodes visited by "+choices[choice1]+"plus extra")
+            print(choices[choice2]+" visits all nodes visited by " +
+                  choices[choice1]+"plus extra")
         elif set1.issuperset(set2):
-            print(choices[choice1] + " visits all nodes visited by " + choices[choice2] + " plus extra")
+            print(choices[choice1] + " visits all nodes visited by " +
+                  choices[choice2] + " plus extra")
         else:
             print("No relation between visited nodes exist.")

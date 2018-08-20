@@ -86,11 +86,11 @@ def a_star(puzzle_start, goal):
     optimal_path_cost = -1
     while open_list_len > 0:
         puzzle_state = open_list.get()
+        open_list_len -= 1
         puzzle_configuration_string = ''.join(
             str(val) for row in puzzle_state.puzzle_configuration for val in row)
         if puzzle_configuration_string in closed_list:
             continue
-        open_list_len -= 1
         closed_list[puzzle_configuration_string] = puzzle_state.puzzle_configuration
         string_to_matrix_mapping[puzzle_configuration_string] = puzzle_state.puzzle_configuration
         # print(puzzle_state.puzzle_configuration)
