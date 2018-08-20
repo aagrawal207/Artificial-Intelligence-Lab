@@ -129,7 +129,6 @@ def a_star(puzzle_start, goal, heuristic_id):
             continue
         closed_list[puzzle_configuration_string] = puzzle_state.puzzle_configuration
         string_to_matrix_mapping[puzzle_configuration_string] = puzzle_state.puzzle_configuration
-        # print(puzzle_state.puzzle_configuration)
         if puzzle_state.puzzle_configuration == goal:
             optimal_path_cost = puzzle_state.g_n
             break
@@ -138,7 +137,7 @@ def a_star(puzzle_start, goal, heuristic_id):
             neighbour_string = ''.join(str(val)
                                        for row in neighbour for val in row)
             if neighbour_string not in closed_list:
-                string_to_matrix_mapping[neighbour_string] = goal
+                string_to_matrix_mapping[neighbour_string] = neighbour
                 parent_list[neighbour_string] = puzzle_configuration_string
                 open_list.put(
                     Puzzle(neighbour, puzzle_state.g_n + 1, h_n(neighbour, goal, heuristic_id)))
@@ -173,9 +172,9 @@ if __name__ == '__main__':
     print('''1. Zero Heuristic.
 2. Displced tiles Heuristic.
 3. Manhattan distance Heuristic.
-4. Heuristic value greater than Actual.''')
-    choice1 = int(input(''''Enter choice 1: '''))
-    choice2 = int(input('Enter choice2: '))
+4. Large Heuristic (h(n) > h*(n)).''')
+    choice1 = int(input('''Enter choice 1: '''))
+    choice2 = int(input('Enter choice 2: '))
     if check(choice1) or check(choice2):
         print("Invalid choice bc.")
     else:

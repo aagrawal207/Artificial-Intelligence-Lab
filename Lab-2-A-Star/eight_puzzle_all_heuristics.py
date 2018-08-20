@@ -130,7 +130,7 @@ def a_star(puzzle_start, goal, heuristic_id):
             neighbour_string = ''.join(str(val)
                                        for row in neighbour for val in row)
             if neighbour_string not in closed_list:
-                string_to_matrix_mapping[neighbour_string] = goal
+                string_to_matrix_mapping[neighbour_string] = neighbour
                 parent_list[neighbour_string] = puzzle_configuration_string
                 open_list.put(
                     Puzzle(neighbour, puzzle_state.g_n + 1, h_n(neighbour, goal, heuristic_id)))
