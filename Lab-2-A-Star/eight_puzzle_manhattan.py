@@ -52,11 +52,7 @@ def find_neighbours(puzzle_state):
     neighbours = []
     row, col = 0, 0
     N = len(puzzle_state)
-    for i in range(3):
-        for j in range(3):
-            if puzzle_state[i][j] == 0:
-                row, col = i, j
-                break
+    row, col = get_row_col_of_val(puzzle_state, 0)
     if row + 1 < N:
         temp = deepcopy(puzzle_state)
         neighbours.append(swap(temp, row, col, row + 1, col))
@@ -72,21 +68,21 @@ def find_neighbours(puzzle_state):
     return neighbours
 
 
-def manhattan_heuristic(puzzle_configuration, goal):
+def get_row_col_of_val(matrix, value):
+    for i in range(3):
+        for j in range(3):
+            if matrix[i][j] == value:
+                return (i, j)
+    return None
+
+
+def manhattan_heuristic(current_state, goal_state):
     heuristic_distance = 0
-    real_row = [0, 0, 0, 1, 1, 1, 2, 2, 2]
-    real_col = [0, 1, 2, 0, 1, 2, 0, 1, 2]
     for i in range(3):
         for j in range(3):
-            real_row[goal[i][j] - 1] = i
-            real_col[goal[i][j] - 1] = j
-    for i in range(3):
-        for j in range(3):
-            val = puzzle_configuration[i][j] - 1
-            if val == -1:
-                continue
-            heuristic_distance += abs(real_row[val] - i) + \
-                abs(real_col[val] - j)
+            value = current_state[i][j]
+            final_row, final_col = get_row_col_of_val(goal_state, value)
+            heuristic_distance += abs(i - final_row) + abs(j - final_col)
     return heuristic_distance
 
 
@@ -107,7 +103,6 @@ def a_star(puzzle_start, goal):
             continue
         closed_list[puzzle_configuration_string] = puzzle_state.puzzle_configuration
         string_to_matrix_mapping[puzzle_configuration_string] = puzzle_state.puzzle_configuration
-        # print(puzzle_state.puzzle_configuration)
         if puzzle_state.puzzle_configuration == goal:
             optimal_path_cost = puzzle_state.g_n
             break
