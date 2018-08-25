@@ -1,19 +1,10 @@
 from copy import deepcopy
 from prettytable import PrettyTable
+from puzzle import Puzzle
 from queue import PriorityQueue
 import os
 import sys
 import timeit
-
-
-class Puzzle:
-    def __init__(self, puzzle_configuration, g_n, h_n):
-        self.puzzle_configuration = puzzle_configuration
-        self.g_n = g_n
-        self.h_n = h_n
-
-    def __lt__(self, other):
-        return (self.g_n + self.h_n) <= (other.g_n + other.h_n)
 
 
 def swap(puzzle_state, row, col, new_row, new_col):
