@@ -23,8 +23,8 @@ if __name__ == '__main__':
 4. Large Heuristic (h(n) > h*(n)).
 5. Displaced tiles heuristic with blank tile cost included.
 6. Manhattan distance heuristic with blank tile cost included''')
-    choice1 = int(input('''Enter choice 1: '''))
-    choice2 = int(input('Enter choice 2: '))
+    choice1 = int(input('''Enter choice 1 for comparison: '''))
+    choice2 = int(input('Enter choice 2 for comparison: '))
     if check(choice1) or check(choice2):
         print("Invalid choice bc.")
     else:

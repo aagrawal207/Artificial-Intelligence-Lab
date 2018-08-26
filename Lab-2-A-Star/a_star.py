@@ -11,8 +11,12 @@ def h_n(neighbour, goal, heuristic_used):
         return heuristics.displaced_tiles_heuristic(neighbour, goal)
     elif heuristic_used == 3:
         return heuristics.manhattan_heuristic(neighbour, goal)
-    else:
+    elif heuristic_used == 4:
         return heuristics.greater_heuristic(neighbour, goal)
+    elif heuristic_used == 5:
+        return heuristics.displaced_tiles_heuristic_with_blank_tile(neighbour, goal)
+    elif heuristic_used == 6:
+        return heuristics.manhattan_heuristic_with_blank_tile(neighbour, goal)
 
 
 def swap(puzzle_state, row, col, new_row, new_col):
@@ -74,9 +78,8 @@ def a_star(puzzle_start, goal, heuristic_used):
             neighbour_string = ''.join(str(val)
                                        for row in neighbour for val in row)
             if neighbour_string not in closed_list:
-                string_to_matrix_mapping[neighbour_string] = neighbour
                 parent_list[neighbour_string] = puzzle_configuration_string
-                neighbour_h_n = 1 + h_n(neighbour, goal, heuristic_used)
+                neighbour_h_n = h_n(neighbour, goal, heuristic_used)
 
                 # to check for monotonic restriction is satisfied or not
                 if node_h_n > neighbour_h_n + 1:
