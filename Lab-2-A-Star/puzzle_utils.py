@@ -32,7 +32,7 @@ def file_input(directory, args):
         print("Please add input file name to the python run command.")
         exit(0)
     try:
-        input_file = open(os.path.join(directory, args[1]))
+        input_file = open(os.path.join(directory, 'input', args[1]))
         input_data = input_file.readlines()
         start = convert_to_matrix(input_data[1], input_data[2], input_data[3])
         goal = convert_to_matrix(input_data[6], input_data[7], input_data[8])

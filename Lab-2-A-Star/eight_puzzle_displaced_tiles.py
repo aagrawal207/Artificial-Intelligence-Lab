@@ -17,4 +17,5 @@ if __name__ == '__main__':
     else:
         print("Goal NOT found")
 
-    print_a_star(start, goal, parent_list, optimal_path_cost, string_to_matrix_mapping, str(len(closed_list)))
+    print_a_star(start, goal, parent_list, optimal_path_cost,
+                 string_to_matrix_mapping, str(len(closed_list)))

@@ -1,6 +1,6 @@
 from copy import deepcopy
 from prettytable import PrettyTable
-from puzzle import Puzzle
+from Puzzle import Puzzle
 from queue import PriorityQueue
 import os
 import sys
@@ -138,7 +138,7 @@ if __name__ == '__main__':
         print("Please add input file name to the python run command.")
         exit(0)
     try:
-        input_file = open(os.path.join(sys.path[0], sys.argv[1]))
+        input_file = open(os.path.join(sys.path[0], 'input', sys.argv[1]))
         input_data = input_file.readlines()
         start = convert_to_matrix(input_data[1], input_data[2], input_data[3])
         goal = convert_to_matrix(input_data[6], input_data[7], input_data[8])
