@@ -7,5 +7,5 @@ class Puzzle:
 
     def __lt__(self, other):
         if (self.g_n + self.h_n) == (other.g_n + other.h_n):
-            return self.g_n < self.h_n
+            return self.g_n < other.g_n
         return (self.g_n + self.h_n) < (other.g_n + other.h_n)

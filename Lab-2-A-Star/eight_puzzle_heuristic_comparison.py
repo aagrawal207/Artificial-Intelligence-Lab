@@ -12,20 +12,17 @@ def check(choice):
     return choice < 1 or choice > 6
 
 
-# each separate list in puzzle_start list represent a row
-# 0 represent blank space
 if __name__ == '__main__':
     start, goal = file_input(sys.path[0], sys.argv)
 
     choices = ["", "Zero Heuristic", "Displaced Tiles",
                "Manhattan", "Large Heuristic(h(n)>h*(n))", "Displaced Tiles (blank tile included)", "Manhattan (blank tile included)"]
-    print('''
-           1. Zero Heuristic.
-           2. Displced tiles Heuristic.
-           3. Manhattan distance Heuristic.
-           4. Large Heuristic (h(n) > h*(n)).
-           5. Displaced tiles heuristic with blank tile cost included.
-           6. Manhattan distance heuristic with blank tile cost included''')
+    print('''1. Zero Heuristic.
+2. Displced tiles Heuristic.
+3. Manhattan distance Heuristic.
+4. Large Heuristic (h(n) > h*(n)).
+5. Displaced tiles heuristic with blank tile cost included.
+6. Manhattan distance heuristic with blank tile cost included''')
     choice1 = int(input('''Enter choice 1: '''))
     choice2 = int(input('Enter choice 2: '))
     if check(choice1) or check(choice2):
@@ -54,10 +51,12 @@ if __name__ == '__main__':
         table.add_row([choices[choice2], len(closed_list.keys()),
                        optimal_path_cost + 1, optimal_path_cost, stop - start, monotonic_satisfied])
         set2 = set(closed_list.keys())
+        if optimal_path_cost == -1:
+            print("\nNo path found. Goal is unreachable.\n")
         print(table)
         print()
         if set2.__eq__(set1):
-            print("Both explored same number of states.")
+            print("Both explored the same set of nodes.")
         elif set2.issuperset(set1):
             print(choices[choice2]+" visits all nodes visited by " +
                   choices[choice1]+" plus extra")
