@@ -3,7 +3,7 @@ import timeit
 from copy import deepcopy
 
 from prettytable import PrettyTable
-from puzzle import Puzzle
+from Puzzle import Puzzle
 from puzzle_utils import file_input
 from a_star import a_star, h_n
 

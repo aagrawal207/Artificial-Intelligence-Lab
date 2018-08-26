@@ -2,7 +2,7 @@ import sys
 
 from a_star import a_star
 from heuristics import manhattan_heuristic
-from puzzle import Puzzle
+from Puzzle import Puzzle
 from puzzle_utils import file_input, print_a_star
 
 # each separate list in puzzle_start list represent a row

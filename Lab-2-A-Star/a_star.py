@@ -1,5 +1,5 @@
 from queue import PriorityQueue
-from puzzle import Puzzle
+from Puzzle import Puzzle
 from copy import deepcopy
 import heuristics
 
