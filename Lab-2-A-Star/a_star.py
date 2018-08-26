@@ -47,6 +47,7 @@ def find_neighbours(puzzle_state):
 
 
 def a_star(puzzle_start, goal, heuristic_used):
+    monotonic_restriction_satisfied = True
     open_list = PriorityQueue()
     open_list.put(puzzle_start)
     open_list_len = 1
@@ -67,6 +68,7 @@ def a_star(puzzle_start, goal, heuristic_used):
         if puzzle_state.puzzle_configuration == goal:
             optimal_path_cost = puzzle_state.g_n
             break
+        node_h_n = puzzle_state.h_n
         neighbours = find_neighbours(puzzle_state.puzzle_configuration)
         for neighbour in neighbours:
             neighbour_string = ''.join(str(val)
@@ -74,7 +76,13 @@ def a_star(puzzle_start, goal, heuristic_used):
             if neighbour_string not in closed_list:
                 string_to_matrix_mapping[neighbour_string] = neighbour
                 parent_list[neighbour_string] = puzzle_configuration_string
+                neighbour_h_n = 1 + h_n(neighbour, goal, heuristic_used)
+
+                # to check for monotonic restriction is satisfied or not
+                if node_h_n > neighbour_h_n + 1:
+                    monotonic_restriction_satisfied = False
+
                 open_list.put(
                     Puzzle(neighbour, puzzle_state.g_n + 1, h_n(neighbour, goal, heuristic_used)))
                 open_list_len += 1
-    return closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping
+    return closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping, monotonic_restriction_satisfied
