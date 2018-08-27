@@ -1,4 +1,3 @@
-
 class Puzzle:
     def __init__(self, puzzle_configuration, g_n, h_n):
         self.puzzle_configuration = puzzle_configuration
