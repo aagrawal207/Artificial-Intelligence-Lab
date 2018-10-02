@@ -10,7 +10,7 @@ def profile(epsilon1, epsilon2, epsilon3, x):
     return y
 
 
-def fuzzication(x, epsilon: 'array'):
+def fuzzication(epsilon: 'array', x):
     epsilon1 = -1 * epsilon[0]
     epsilon2 = 0
     epsilon3 = 0
@@ -41,9 +41,9 @@ def rules(theta, omega, epsilon_theta: 'array', epsilon_omega: 'array'):
             if val1 or val2 == -1:
                 continue
             else:
-                curr_val = min(val1, val2)
-                curr_id = dictionary[str(id1)+str(id2)]
-                y_curr.append([curr_val, curr_id])
+                curr_belongingness = min(val1, val2)
+                curr_id = dictionary[str(id1) +str(id2)]
+                y_curr.append([curr_belongingness, curr_id])
     return y_curr
 
 
@@ -54,9 +54,9 @@ def defuzzify(epsilon: 'array of epsilon for curr', y):
     epsilon4 = epsilon3 + (epsilon2 - epsilon1)
     x_centroid = (epsilon1 + epsilon4) / 2
     base1 = epsilon4 - epsilon1
-    base2 = base1 * y
+    base2 = base1 * y # How?
     area = 0.5 * (base1 + base2) * y
-    return (x_centroid, area)
+    return x_centroid, area # either x_centroid or area is being returned 0 for the given values
 
 
 def compute_current(theta, omega, epsilon_theta, epsilon_omega, epsilon_curr):
@@ -64,26 +64,26 @@ def compute_current(theta, omega, epsilon_theta, epsilon_omega, epsilon_curr):
 
     dictionary = {0: [-1 * epsilon_curr[0], 0, 0],
                   1: [0, epsilon_curr[1], epsilon_curr[2]],
-                  2: [epsilon_curr[3] - epsilon_curr[4], epsilon_curr[5]],
-                  -1: [-1*(epsilon_curr[2] + epsilon_curr[1]), -1*(epsilon_curr[2]), -1*(epsilon_curr[1])],
-                  - 2: [-1*(epsilon_curr[5] + epsilon_curr[4] - epsilon_curr[3], -1 * epsilon_curr[5]), -1 * epsilon_curr[4]]
+                  2: [epsilon_curr[3], epsilon_curr[4], epsilon_curr[5]],
+                  -1: [-1 * (epsilon_curr[2] + epsilon_curr[1]), -1 * epsilon_curr[2], -1 * epsilon_curr[1]],
+                  - 2: [-1 * (epsilon_curr[5] + epsilon_curr[4] - epsilon_curr[3]), -1 * epsilon_curr[5], -1 * epsilon_curr[4]]
                   }
 
     total_area = 0
     weighted_area = 0
     for tup in curr_list:
         centroid, area = defuzzify(dictionary[tup[1]], tup[0])
-        weighted_area += (centroid*area)
+        weighted_area += (centroid * area)
         total_area += area
-    return weighted_area/total_area
+    return weighted_area / total_area
 
 
 def main():
-    epsilon_theta = [0]*3
-    epsilon_omega = [0]*3
-    epsilon_curr = [0]*6
-    theta = 0
-    omega = 0
+    epsilon_theta = [3, 2, 5]
+    epsilon_omega = [2, 2, 4]
+    epsilon_curr = [1, 1, 1, 1, 1, 1]
+    theta = 2.5
+    omega = 3
 
     current = compute_current(
         theta, omega, epsilon_theta, epsilon_omega, epsilon_curr)
