@@ -14,19 +14,20 @@ if __name__ == '__main__':
 1. Displced tiles Heuristic.
 2. Manhattan distance Heuristic.
 3. Displaced tile heuristic with blank tile cost included
-4. Manhattand distance heuristic with blank tile cost included
+4. Manhattan distance heuristic with blank tile cost included
 5. Manhattan distance + displaced tile heuristic
 Enter choice: '''))
     if choice > 5 or choice < 1:
         print("Invalid choice bc.")
-    start_time = timeit.default_timer()
-    puzzle_start = Puzzle(start, 0, h_n(start, goal, choice))
-    closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping, monotonic_satisfied = hill_climbing(
-        puzzle_start, goal, choice)
-    stop_time = timeit.default_timer()
-    print_hill_climbing(start, goal, parent_list, optimal_path_cost,
-                        string_to_matrix_mapping, str(len(closed_list)))
-    print(f'Time taken: {stop_time -start_time}')
+    else:
+        start_time = timeit.default_timer()
+        puzzle_start = Puzzle(start, 0, h_n(start, goal, choice))
+        closed_list, parent_list, optimal_path_cost, string_to_matrix_mapping, monotonic_satisfied = hill_climbing(
+            puzzle_start, goal, choice)
+        stop_time = timeit.default_timer()
+        print_hill_climbing(start, goal, parent_list, optimal_path_cost,
+                            string_to_matrix_mapping, str(len(closed_list)))
+        print(f'Time taken: {stop_time -start_time}')
 
-    print("Is monotonic restriction followed: %s" %
-          (str(monotonic_satisfied)))
+        print("Is monotonic restriction followed: %s" %
+              (str(monotonic_satisfied)))
