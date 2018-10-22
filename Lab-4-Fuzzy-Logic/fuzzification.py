@@ -42,7 +42,7 @@ def rules(theta, omega, epsilon_theta: 'array', epsilon_omega: 'array'):
                 continue
             else:
                 curr_belongingness = min(val1, val2)
-                curr_id = dictionary[str(id1) +str(id2)]
+                curr_id = dictionary[str(id1) + str(id2)]
                 y_curr.append([curr_belongingness, curr_id])
     return y_curr
 
@@ -54,9 +54,10 @@ def defuzzify(epsilon: 'array of epsilon for curr', y):
     epsilon4 = epsilon3 + (epsilon2 - epsilon1)
     x_centroid = (epsilon1 + epsilon4) / 2
     base1 = epsilon4 - epsilon1
-    base2 = base1 * y # How?
+    base2 = base1 - 2*(epsilon2 - epsilon1)
     area = 0.5 * (base1 + base2) * y
-    return x_centroid, area # either x_centroid or area is being returned 0 for the given values
+    # either x_centroid or area is being returned 0 for the given values
+    return x_centroid, area
 
 
 def compute_current(theta, omega, epsilon_theta, epsilon_omega, epsilon_curr):
@@ -79,6 +80,7 @@ def compute_current(theta, omega, epsilon_theta, epsilon_omega, epsilon_curr):
 
 
 def main():
+    print("started")
     epsilon_theta = [3, 2, 5]
     epsilon_omega = [2, 2, 4]
     epsilon_curr = [1, 1, 1, 1, 1, 1]
@@ -88,3 +90,7 @@ def main():
     current = compute_current(
         theta, omega, epsilon_theta, epsilon_omega, epsilon_curr)
     print(current)
+
+
+if __name__ == "__main__":
+    main()
