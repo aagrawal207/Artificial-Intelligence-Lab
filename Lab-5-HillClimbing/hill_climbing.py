@@ -59,7 +59,6 @@ def hill_climbing(puzzle_start, goal, heuristic_used):
     string_to_matrix_mapping = {}
     optimal_path_cost = -1
     while open_list_len > 0:
-        # print(f'len: {open_list_len}')
         puzzle_state = open_list.get()
         open_list_len -= 1
         puzzle_configuration_string = ''.join(
@@ -67,8 +66,6 @@ def hill_climbing(puzzle_start, goal, heuristic_used):
         closed_list[puzzle_configuration_string] = puzzle_state.g_n
         string_to_matrix_mapping[puzzle_configuration_string] = puzzle_state.puzzle_configuration
         current_cost = puzzle_state.h_n
-        print(
-            f'current cost: {current_cost} string: {puzzle_configuration_string}')
         if puzzle_state.puzzle_configuration == goal:
             optimal_path_cost = puzzle_state.g_n
             break
@@ -83,10 +80,7 @@ def hill_climbing(puzzle_start, goal, heuristic_used):
             neighbour_h_n = h_n(neighbour, goal, heuristic_used)
             neighbour_g_n = puzzle_state.g_n + 1
             neighbour_cost = neighbour_h_n
-            print(
-                f'neighbour cost {neighbour_cost} string: {neighbour_string}')
             if neighbour_cost <= current_cost and neighbour_string not in closed_list:
-                print(f'chosen {neighbour_string}')
                 best_neigbour_string = neighbour_string
                 best_neigbour = neighbour
                 current_cost = neighbour_cost
@@ -95,13 +89,11 @@ def hill_climbing(puzzle_start, goal, heuristic_used):
                 monotonic_restriction_satisfied = False
 
         if best_neigbour is not None:
-            print(f'best neighbour {best_neigbour_string}')
             open_list.put(Puzzle(best_neigbour, puzzle_state.g_n + 1,
                                  h_n(best_neigbour, goal, heuristic_used)))
             open_list_len += 1
             parent_list[best_neigbour_string] = puzzle_configuration_string
         else:
-            print('in break')
             optimal_path_cost = -1
             break
 

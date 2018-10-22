@@ -74,17 +74,13 @@ def simulated_annealing(puzzle_start, goal, heuristic_used, max_temperature, coo
     current_iter = 0
     while open_list_len > 0 and current_iter < max_iter:
         current_iter += 1
-        print(f'iteration : {current_iter}')
         puzzle_state = open_list.get()
         open_list_len -= 1
         puzzle_configuration_string = ''.join(
             str(val) for row in puzzle_state.puzzle_configuration for val in row)
         string_to_matrix_mapping[puzzle_configuration_string] = puzzle_state.puzzle_configuration
         current_cost = puzzle_state.h_n
-        print(
-            f'current cost: {current_cost} string: {puzzle_configuration_string}')
         if puzzle_state.puzzle_configuration == goal:
-            print(f'parent of goal {parent_list[puzzle_configuration_string]}')
             optimal_path_cost = puzzle_state.g_n
             break
         node_h_n = puzzle_state.h_n
@@ -101,7 +97,6 @@ def simulated_annealing(puzzle_start, goal, heuristic_used, max_temperature, coo
         neighbour_string = ''.join(
             str(val) for row in neighbour_chosen for val in row)
         neighbour_cost = h_n(neighbour_chosen, goal, heuristic_used)
-        print(f'neighbour: {neighbour_string} cost : {neighbour_cost}')
         current_temp = get_temperature(
             max_temperature, current_iter, cooling_function)
         if current_temp == 0:
@@ -116,14 +111,12 @@ def simulated_annealing(puzzle_start, goal, heuristic_used, max_temperature, coo
         chosen = np.random.choice(
             [True, False], p=[probability, 1 - probability])
         if chosen:
-            print(f'Chosen: {neighbour_string}')
             number_states_explored += 1
             open_list.put(
                 Puzzle(neighbour_chosen, puzzle_state.g_n + 1, neighbour_cost))
             parent_list[neighbour_string] = puzzle_configuration_string
 
         else:
-            print('not chosen')
             open_list.put(
                 Puzzle(puzzle_state.puzzle_configuration, puzzle_state.g_n, puzzle_state.h_n))
         open_list_len += 1

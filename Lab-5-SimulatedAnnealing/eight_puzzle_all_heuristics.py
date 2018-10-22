@@ -29,7 +29,7 @@ Enter choice: '''))
         parent_list, optimal_path_cost, string_to_matrix_mapping, number_states_explored = simulated_annealing(
             puzzle_start, goal, choice, max_temperature, cooling_function)
         stop_time = timeit.default_timer()
-        print(f'Len of parent list : {len(parent_list)}')
+        # print(f'Len of parent list : {len(parent_list)}')
         print_simulated_annealing(start, goal, parent_list, optimal_path_cost,
                                   string_to_matrix_mapping, number_states_explored)
         print(f'Time taken: {stop_time -start_time}')

@@ -1,6 +1,6 @@
 # combined heuristic of manhattan and displaced
 def combined_heuristic(puzzle_configuration, goal):
-    return manhattan_heuristic(puzzle_configuration, goal) + displaced_tiles_heuristic(puzzle_configuration, goal)
+    return manhattan_heuristic(puzzle_configuration, goal) * displaced_tiles_heuristic(puzzle_configuration, goal)
 
 
 # manhattan heuristic (without consideration of blank tile)
