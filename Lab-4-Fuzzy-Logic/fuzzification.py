@@ -6,7 +6,7 @@ def profile(epsilon1, epsilon2, epsilon3, x):
     elif epsilon2 <= x <= epsilon3:
         y = 1
     elif epsilon3 < x <= epsilon4:
-        y = (epsilon4 - x) / ((epsilon4 - epsilon3))
+        y = (epsilon4 - x) / (epsilon4 - epsilon3)
     return y
 
 
@@ -26,7 +26,7 @@ def fuzzication(epsilon: 'array', x):
     epsilon3 = -1 * (epsilon[1])
     y_small_neg = profile(epsilon1, epsilon2, epsilon3, x)
 
-    return (y_small_neg, y_zero, y_small_pos)
+    return y_small_neg, y_zero, y_small_pos
 
 
 def rules(theta, omega, epsilon_theta: 'array', epsilon_omega: 'array'):
@@ -38,7 +38,7 @@ def rules(theta, omega, epsilon_theta: 'array', epsilon_omega: 'array'):
     y_curr = []
     for id1, val1 in enumerate(y_theta):
         for id2, val2 in enumerate(y_omega):
-            if val1 or val2 == -1:
+            if val1 == -1 or val2 == -1:
                 continue
             else:
                 curr_belongingness = min(val1, val2)
@@ -56,7 +56,6 @@ def defuzzify(epsilon: 'array of epsilon for curr', y):
     base1 = epsilon4 - epsilon1
     base2 = base1 - 2*(epsilon2 - epsilon1)
     area = 0.5 * (base1 + base2) * y
-    # either x_centroid or area is being returned 0 for the given values
     return x_centroid, area
 
 
@@ -80,10 +79,9 @@ def compute_current(theta, omega, epsilon_theta, epsilon_omega, epsilon_curr):
 
 
 def main():
-    print("started")
     epsilon_theta = [3, 2, 5]
     epsilon_omega = [2, 2, 4]
-    epsilon_curr = [1, 1, 1, 1, 1, 1]
+    epsilon_curr = [1, 2, 4, 3, 5, 6]
     theta = 2.5
     omega = 3
 
