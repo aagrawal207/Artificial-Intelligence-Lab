@@ -1,3 +1,6 @@
+import time
+
+
 def profile(epsilon1, epsilon2, epsilon3, x):
     y = -1
     epsilon4 = epsilon3 + (epsilon2 - epsilon1)
@@ -82,12 +85,20 @@ def main():
     epsilon_theta = [3, 2, 5]
     epsilon_omega = [2, 2, 4]
     epsilon_curr = [1, 2, 4, 3, 5, 6]
-    theta = 2.5
-    omega = 3
+    theta = 1
+    omega = 1
 
     current = compute_current(
         theta, omega, epsilon_theta, epsilon_omega, epsilon_curr)
     print(current)
+    while True:
+        time.sleep(1)
+        theta_new = theta + omega / 20 + current / 800
+        omega_new = omega + current / 20
+        print(theta_new, omega_new)
+        current = compute_current(
+            theta_new, omega_new, epsilon_theta, epsilon_omega, epsilon_curr)
+        print(current)
 
 
 if __name__ == "__main__":
