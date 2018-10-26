@@ -84,7 +84,7 @@ def compute_current(theta, omega, epsilon_theta, epsilon_omega, epsilon_curr):
 def main():
     epsilon_theta = [3, 2, 5]
     epsilon_omega = [2, 2, 4]
-    epsilon_curr = [1, 2, 4, 3, 5, 6]
+    epsilon_curr = [2, 4, 8, 6, 10, 12]
     theta = 1
     omega = 1
 
@@ -93,8 +93,9 @@ def main():
     print(current)
     while True:
         time.sleep(1)
-        theta_new = theta + omega / 20 + current / 800
-        omega_new = omega + current / 20
+        theta_new = theta + omega / 10 + current / 200
+        omega_new = omega + current / 10
+        theta, omega = theta_new, omega_new
         print(theta_new, omega_new)
         current = compute_current(
             theta_new, omega_new, epsilon_theta, epsilon_omega, epsilon_curr)
