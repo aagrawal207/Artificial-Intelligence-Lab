@@ -1,6 +1,6 @@
-# Report
+# Assignment 4
 
-This assignment contains a program to control an inverted pendulum using Fuzzy Logic.\
+This assignment contains a program to control an inverted pendulum using Fuzzy Logic.
 
 The profile for the Theta angle is as follows
 
