@@ -14,7 +14,8 @@ in dynamic equilibrium. Whenever the pendulum departs
 from vertical, a torque is produced by sending a current 'i'
 
 **Controlling factors for appropriate current**
-Angle and angular velocity
+
+Theta and Omega
 
 
 
